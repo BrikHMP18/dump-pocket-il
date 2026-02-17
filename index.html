@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Robotic Testbed for Autonomous Dump Pocket Cleaning Using Imitation Learning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Georgia, 'Crimson Text', 'Times New Roman', serif;
+            font-size: 18px;
+            line-height: 1.7;
+            color: #2d3748;
+            background: #ffffff;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 40px 0 50px 0;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 50px;
+        }
+
+        .venue {
+            font-family: -apple-system, BlinkMacSystemFont, 'Source Sans Pro', sans-serif;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666666;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        h1 {
+            font-family: -apple-system, BlinkMacSystemFont, 'Source Sans Pro', sans-serif;
+            font-size: 36px;
+            font-weight: 400;
+            color: #2d3748;
+            line-height: 1.3;
+            margin: 0 auto 25px auto;
+            max-width: 800px;
+        }
+
+        .authors {
+            font-size: 18px;
+            margin-top: 25px;
+            color: #333333;
+        }
+
+        .authors a {
+            color: #1367a7;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-bottom 0.2s;
+        }
+
+        .authors a:hover {
+            border-bottom: 1px solid #1367a7;
+        }
+
+        .authors sup {
+            font-size: 14px;
+        }
+
+        .affiliations {
+            font-size: 14px;
+            margin-top: 15px;
+            color: #666666;
+            line-height: 1.5;
+        }
+
+        .affiliations a {
+            color: #1367a7;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+        }
+
+        .affiliations a:hover {
+            border-bottom: 1px solid #1367a7;
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 60px;
+        }
+
+        h2 {
+            font-family: -apple-system, BlinkMacSystemFont, 'Source Sans Pro', sans-serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 25px;
+            margin-top: 50px;
+        }
+
+        h3 {
+            font-family: -apple-system, BlinkMacSystemFont, 'Source Sans Pro', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 15px;
+            margin-top: 30px;
+        }
+
+        /* Abstract */
+        .abstract {
+            background: #f8f9fa;
+            padding: 25px 30px;
+            border-left: 3px solid #1367a7;
+            line-height: 1.7;
+        }
+
+        .abstract p {
+            margin: 0;
+            text-align: justify;
+        }
+
+        /* Links */
+        a {
+            color: #1367a7;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Results Table */
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 16px;
+        }
+
+        .results-table th {
+            border-top: 2px solid #333333;
+            border-bottom: 1px solid #666666;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #2d3748;
+            background: #ffffff;
+        }
+
+        .results-table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .results-table tbody tr:last-child td {
+            border-bottom: 2px solid #333333;
+        }
+
+        .results-table tr.best {
+            background: #f8f9fa;
+        }
+
+        .results-table tr.baseline {
+            background: #ffffff;
+        }
+
+        /* Videos */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 28px;
+            margin: 30px 0;
+        }
+
+        .video-card {
+            display: flex;
+            flex-direction: column;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            background: #111;
+            cursor: pointer;
+        }
+
+        .video-card video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .video-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .video-overlay:hover {
+            background: rgba(0,0,0,0.12);
+        }
+
+        .play-btn {
+            width: 52px;
+            height: 52px;
+            background: rgba(255,255,255,0.88);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s, transform 0.15s;
+            pointer-events: none;
+        }
+
+        .play-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: #2d3748;
+            margin-left: 3px; /* optical center for play icon */
+        }
+
+        .video-wrapper.paused .play-btn {
+            opacity: 1;
+        }
+
+        .video-wrapper:hover .play-btn {
+            opacity: 1;
+        }
+
+        .video-wrapper.paused:hover .play-btn {
+            transform: scale(1.08);
+        }
+
+        .video-label {
+            padding: 14px 16px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .video-label .model-name {
+            font-family: -apple-system, BlinkMacSystemFont, 'Source Sans Pro', sans-serif;
+            font-size: 17px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .video-label .model-perf {
+            font-family: -apple-system, BlinkMacSystemFont, 'Source Sans Pro', sans-serif;
+            font-size: 13px;
+            color: #666666;
+        }
+
+        .video-label .model-perf span {
+            font-weight: 600;
+            color: #1367a7;
+        }
+
+        @media (max-width: 600px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Figures */
+        .paper-figure {
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .paper-figure img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #e0e0e0;
+        }
+
+        .paper-figure figcaption {
+            margin-top: 12px;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #666666;
+            text-align: left;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .paper-figure figcaption strong {
+            color: #333333;
+        }
+
+        /* Resources */
+        .resource-group {
+            margin-bottom: 30px;
+        }
+
+        .resource-group h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2d3748;
+        }
+
+        .resource-links ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .resource-links li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .resource-links li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #1367a7;
+        }
+
+        .resource-links a {
+            color: #1367a7;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-bottom 0.2s;
+        }
+
+        .resource-links a:hover {
+            border-bottom: 1px solid #1367a7;
+        }
+
+        /* Citation */
+        .citation pre {
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-left: 3px solid #1367a7;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        .citation code {
+            font-family: 'SFMono-Regular', 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #2d3748;
+        }
+
+        /* Acknowledgments */
+        .acknowledgments p {
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid #e0e0e0;
+            margin-top: 80px;
+            padding: 30px 0;
+            text-align: center;
+            font-size: 14px;
+            color: #666666;
+        }
+
+        footer a {
+            color: #1367a7;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+        }
+
+        footer a:hover {
+            border-bottom: 1px solid #1367a7;
+        }
+
+        footer .last-updated {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #999999;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+                font-size: 16px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            h3 {
+                font-size: 20px;
+            }
+
+            .abstract {
+                padding: 20px;
+            }
+
+            .results-table {
+                font-size: 14px;
+            }
+
+            .results-table th,
+            .results-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="venue">World Mining Congress 2026</div>
+            <h1>A Robotic Testbed for Autonomous Dump Pocket Cleaning Using Imitation Learning</h1>
+            <div class="authors">
+                <a href="mailto:brik.meza@pucp.edu.pe">Brik Henrry Meza Pinedo</a><sup>1,3</sup>,
+                <a href="#">Brian Pajares Correa</a><sup>1,2</sup>
+            </div>
+            <div class="affiliations">
+                <sup>1</sup>Pontifical Catholic University of Peru (PUCP) &nbsp;&nbsp;
+                <sup>2</sup>Antamina &nbsp;&nbsp;
+                <sup>3</sup><a href="https://nonhuman.site/">NONHUMAN Lab</a>
+            </div>
+        </header>
+
+        <main>
+            <!-- Abstract -->
+            <section>
+                <h2>Abstract</h2>
+                <div class="abstract">
+                    <p>
+                        Dump pocket blockages at primary crushers cause production downtime and require manual clearing in confined spaces, leading to multiple fatalities annually from engulfment. Current autonomous approaches in mining remain limited, and the feasibility of state-of-the-art imitation learning (IL) for excavation tasks has not been systematically evaluated. This paper introduces an experimental testbed and benchmark for evaluating end-to-end IL architectures on autonomous dump pocket cleaning under controlled laboratory conditions. We benchmark four IL architectures: Action Chunking with Transformers (ACT), Diffusion Policy, and Vision-Language-Action models (π₀.₅ and SmolVLA), using a low-cost SO-ARM100 platform ($250) with granular bentonite material. In a preliminary single-session evaluation (10-minute continuous autonomous operation per model), π₀.₅ removes 404 g (40.4 g/min, approximately 65% of the expert teleoperation estimate of 620 g), while ACT removes 169 g, SmolVLA 113 g, and Diffusion Policy 57 g. Notably, ACT removes more material than SmolVLA despite lacking pretrained representations, suggesting that pretraining benefit is architecture- and scale-dependent rather than universal in this domain. Diffusion Policy is notably the slowest, consistent with its iterative denoising inference process. This work establishes a reproducible benchmark and open dataset (162 demonstrations) to support future research on autonomous confined-space operations.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Key Results -->
+            <section>
+                <h2>Key Results</h2>
+                <p style="font-size:15px; color:#666; margin-bottom:15px;">Single 10-minute autonomous session per model. Expert baseline estimated from demonstration data (62.04 g/min × 10 min). N=1 session per model — values represent single observed measurements.</p>
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Removed (g / 10 min)</th>
+                            <th>Rate (g/min)</th>
+                            <th>% of Expert (est.)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="baseline">
+                            <td><strong>Expert Teleoperation (est.)</strong></td>
+                            <td>≈ 620</td>
+                            <td>62.0</td>
+                            <td>100%</td>
+                        </tr>
+                        <tr class="best">
+                            <td><strong>π₀.₅ (VLA)</strong></td>
+                            <td><strong>404</strong></td>
+                            <td>40.4</td>
+                            <td><strong>65%</strong></td>
+                        </tr>
+                        <tr>
+                            <td>ACT</td>
+                            <td>169</td>
+                            <td>16.9</td>
+                            <td>27%</td>
+                        </tr>
+                        <tr>
+                            <td>SmolVLA</td>
+                            <td>113</td>
+                            <td>11.3</td>
+                            <td>18%</td>
+                        </tr>
+                        <tr>
+                            <td>Diffusion Policy</td>
+                            <td>57</td>
+                            <td>5.7</td>
+                            <td>9%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Videos -->
+            <section>
+                <h2>Success Rollouts</h2>
+                <p style="margin-bottom: 24px; color: #555;">One representative autonomous run per model (10-minute session, muted). Filmed with the overhead and wrist cameras used during evaluation.</p>
+                <div class="video-grid">
+
+                    <div class="video-card">
+                        <div class="video-wrapper paused" onclick="toggleVideo(this)">
+                            <video muted playsinline loop autoplay>
+                                <source src="videos/pi05.mp4" type="video/mp4">
+                            </video>
+                            <div class="video-overlay">
+                                <div class="play-btn">
+                                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="video-label">
+                            <div class="model-name">π₀.₅ &nbsp;<span style="font-size:13px;font-weight:400;color:#888;">VLA · ~3.7B params</span></div>
+                            <div class="model-perf"><span>404 g</span> removed · 40.4 g/min · 65% of expert</div>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <div class="video-wrapper paused" onclick="toggleVideo(this)">
+                            <video muted playsinline loop autoplay>
+                                <source src="videos/act.mp4" type="video/mp4">
+                            </video>
+                            <div class="video-overlay">
+                                <div class="play-btn">
+                                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="video-label">
+                            <div class="model-name">ACT &nbsp;<span style="font-size:13px;font-weight:400;color:#888;">No pretraining</span></div>
+                            <div class="model-perf"><span>169 g</span> removed · 16.9 g/min · 27% of expert</div>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <div class="video-wrapper paused" onclick="toggleVideo(this)">
+                            <video muted playsinline loop autoplay>
+                                <source src="videos/smolvla.mp4" type="video/mp4">
+                            </video>
+                            <div class="video-overlay">
+                                <div class="play-btn">
+                                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="video-label">
+                            <div class="model-name">SmolVLA &nbsp;<span style="font-size:13px;font-weight:400;color:#888;">VLA · 450M params</span></div>
+                            <div class="model-perf"><span>113 g</span> removed · 11.3 g/min · 18% of expert</div>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <div class="video-wrapper paused" onclick="toggleVideo(this)">
+                            <video muted playsinline loop autoplay>
+                                <source src="videos/df.mp4" type="video/mp4">
+                            </video>
+                            <div class="video-overlay">
+                                <div class="play-btn">
+                                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="video-label">
+                            <div class="model-name">Diffusion Policy &nbsp;<span style="font-size:13px;font-weight:400;color:#888;">No pretraining</span></div>
+                            <div class="model-perf"><span>57 g</span> removed · 5.7 g/min · 9% of expert</div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Figures -->
+            <section>
+                <h2>Figures</h2>
+                <figure class="paper-figure">
+                    <img src="figures/figure1.jpg" alt="System overview">
+                    <figcaption>
+                        <strong>Figure 1.</strong> Experimental setup for autonomous dump pocket cleaning using imitation learning. Top left: teleoperated dataset (162 demonstrations). Top right: physical testbed with dual RGB cameras (top-view, wrist-mounted), dump pocket, and SO-ARM100 platform (follower and leader arms). Bottom: imitation learning pipeline receiving observations (camera streams, task prompt*, proprioceptive state), processing through policy network, and executing actions in closed loop. *Task prompt used only by VLA models (π₀.₅, SmolVLA) for language conditioning; ACT and Diffusion operate on vision and proprioception only.
+                    </figcaption>
+                </figure>
+
+                <figure class="paper-figure">
+                    <img src="figures/figure2.png" alt="Benchmark results">
+                    <figcaption>
+                        <strong>Figure 2.</strong> Benchmark results and offline training metrics. (a) Validation loss trajectories; ACT is plotted as (val/loss)² for visual scale comparability — ACT uses a composite L₁+λKL objective while other models use MSE/flow-matching losses. Best checkpoints (stars): ACT 0.0754 @ 9,205 steps; π₀.₅ 0.0745 @ 25,774 steps; SmolVLA 0.0254 @ 14,728 steps; Diffusion 0.0141 @ 7,252 steps. This panel is a convergence diagnostic; cross-architecture comparison uses real-robot results only. (b) Total material removed (g) in a single 10-minute autonomous session. Expert baseline (~620 g) estimated from demonstration data (62.0 g/min, 2542 g over 40.99 min). π₀.₅ removes 404 g, followed by ACT (169 g), SmolVLA (113 g), and Diffusion Policy (57 g).
+                    </figcaption>
+                </figure>
+            </section>
+
+            <!-- Resources -->
+            <section>
+                <h2>Resources</h2>
+
+                <div class="resource-group">
+                    <h3>Paper & Code</h3>
+                    <div class="resource-links">
+                        <ul>
+                            <li><a href="main.pdf">Paper (WMC 2026 submission)</a></li>
+                            <li><a href="https://github.com/BrikHMP18/lerobot">Code (LeRobot fork with training scripts)</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="resource-group">
+                    <h3>Dataset</h3>
+                    <div class="resource-links">
+                        <ul>
+                            <li><a href="https://huggingface.co/datasets/Autobrik/SO-ARM100-dump-pocket-cleaning2">SO-ARM100 Dump Pocket Cleaning Dataset (162 episodes, HuggingFace)</a></li>
+                            <li><a href="https://huggingface.co/spaces/lerobot/visualize_dataset?path=%2FAutobrik%2FSO-ARM100-dump-pocket-cleaning2%2Fepisode_0">Interactive Dataset Visualizer</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="resource-group">
+                    <h3>Model Checkpoints</h3>
+                    <div class="resource-links">
+                        <ul>
+                            <li><a href="https://huggingface.co/Autobrik/SO-ARM100-dump-pocket-cleaning2-pi05">π₀.₅ VLA Model — 404 g / 10 min (40.4 g/min, 65% of expert estimate)</a></li>
+                            <li><a href="https://huggingface.co/Autobrik/SO-ARM100-dump-pocket-cleaning2-act">ACT Model — 169 g / 10 min (16.9 g/min, 27% of expert estimate)</a></li>
+                            <li><a href="https://huggingface.co/Autobrik/SO-ARM100-dump-pocket-cleaning2-smolvla">SmolVLA Model — 113 g / 10 min (11.3 g/min, 18% of expert estimate)</a></li>
+                            <li><a href="https://huggingface.co/Autobrik/SO-ARM100-dump-pocket-cleaning2-diffusion">Diffusion Policy Model — 57 g / 10 min (5.7 g/min, 9% of expert estimate)</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Citation -->
+            <section class="citation">
+                <h2>Citation</h2>
+                <pre><code>@inproceedings{meza2026autonomous,
+  title={A Robotic Testbed for Autonomous Dump Pocket Cleaning Using Imitation Learning},
+  author={Meza Pinedo, Brik Henrry and Pajares Correa, Brian},
+  booktitle={World Mining Congress 2026},
+  year={2026}
+}</code></pre>
+            </section>
+
+            <!-- Acknowledgments -->
+            <section class="acknowledgments">
+                <h2>Acknowledgments</h2>
+                <p>
+                    We thank <strong>NONHUMAN</strong> for providing laboratory facilities and infrastructure support that enabled this research. We are grateful to the open-source robotics community, particularly the developers of the <strong>SO-ARM100 platform</strong> and the <strong>open-source robot learning library</strong>, whose accessible tools and collaborative spirit made these experiments possible. We also acknowledge <strong>PUCP</strong> for institutional support.
+                </p>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2026 <a href="https://nonhuman.site/">NONHUMAN Lab</a> • Contact: <a href="mailto:brik.meza@pucp.edu.pe">brik.meza@pucp.edu.pe</a></p>
+            <p class="last-updated">Last updated: February 2026</p>
+        </footer>
+    </div>
+    <script>
+        // Icon paths
+        const PLAY_PATH  = 'M8 5v14l11-7z';
+        const PAUSE_PATH = 'M6 19h4V5H6v14zm8-14v14h4V5h-4z';
+
+        function toggleVideo(wrapper) {
+            const video = wrapper.querySelector('video');
+            const icon  = wrapper.querySelector('.play-btn svg path');
+            if (video.paused) {
+                video.play();
+                wrapper.classList.remove('paused');
+                icon.setAttribute('d', PAUSE_PATH);
+            } else {
+                video.pause();
+                wrapper.classList.add('paused');
+                icon.setAttribute('d', PLAY_PATH);
+            }
+        }
+
+        // Autoplay as soon as the page loads; update icon state once playing
+        document.querySelectorAll('.video-wrapper').forEach(wrapper => {
+            const video = wrapper.querySelector('video');
+            video.play().then(() => {
+                wrapper.classList.remove('paused');
+                wrapper.querySelector('.play-btn svg path').setAttribute('d', PAUSE_PATH);
+            }).catch(() => {
+                // Autoplay blocked — keep paused state, user must click
+            });
+        });
+    </script>
+</body>
+</html>
