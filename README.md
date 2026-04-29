@@ -4,7 +4,7 @@
 
 ## Overview
 
-This repository contains the project webpage for our WMC 2026 paper on autonomous dump pocket cleaning using end-to-end imitation learning. We benchmark four state-of-the-art imitation learning architectures on a low-cost SO-ARM100 robotic platform to demonstrate safe, autonomous excavation that eliminates human exposure in confined spaces.
+This repository contains the project webpage for our WMC 2026 paper on autonomous dump pocket cleaning using imitation learning. We benchmark four imitation learning architectures on a lab-scale dump-pocket testbed built on the open-source SO-ARM100 low-cost robot platform, with the long-term goal of reducing human exposure in hazardous hopper and crusher areas.
 
 ## Project Page
 
@@ -17,12 +17,12 @@ Preliminary single-session evaluation (10-minute continuous autonomous operation
 | Model | Removed (g / 10 min) | Rate (g/min) | % of Expert (est.) |
 |-------|----------------------|--------------|---------------------|
 | Expert Teleoperation (est.) | ≈ 620 | 62.0 | 100% |
-| **π₀.₅ (VLA, ~3B params)** | **404** | **40.4** | **65%** |
+| **π₀.₅ (VLA, ~3.7B params)** | **404** | **40.4** | **65%** |
 | ACT (no pretraining) | 169 | 16.9 | 27% |
 | SmolVLA (VLA, 450M params) | 113 | 11.3 | 18% |
 | Diffusion Policy | 57 | 5.7 | 9% |
 
-Notable finding: ACT removes more material than SmolVLA despite lacking pretrained representations, suggesting pretraining benefit is architecture- and scale-dependent rather than universal.
+Notable observation: ACT removes more material than SmolVLA in this single-session benchmark despite lacking pretrained representations. This raises the hypothesis that, for narrow single-task settings where the target domain differs from pretraining data, learning from scratch may remain competitive with fine-tuning a pretrained model.
 
 ## Success Rollout Videos
 
@@ -48,15 +48,21 @@ All trained models are available on HuggingFace:
 ## Authors
 
 - **Brik Henrry Meza Pinedo** (PUCP, [NONHUMAN](https://nonhuman.site/))
-- **Brian Pajares Correa** (PUCP, Antamina)
+- **Brian Pajares Correa** (PUCP)
 
 ## Abstract
 
-Dump pocket blockages at primary crushers cause production downtime and require manual clearing in confined spaces, leading to multiple fatalities annually from engulfment. Current autonomous approaches in mining remain limited, and the feasibility of state-of-the-art imitation learning (IL) for excavation tasks has not been systematically evaluated. This paper introduces an experimental testbed and benchmark for evaluating end-to-end IL architectures on autonomous dump pocket cleaning under controlled laboratory conditions. We benchmark four IL architectures: Action Chunking with Transformers (ACT), Diffusion Policy, and Vision-Language-Action models (π₀.₅ and SmolVLA), using a low-cost SO-ARM100 platform ($250) with granular bentonite material. In a preliminary single-session evaluation (10-minute continuous autonomous operation per model), π₀.₅ removes 404 g (40.4 g/min, approximately 65% of the expert teleoperation estimate of 620 g), while ACT removes 169 g, SmolVLA 113 g, and Diffusion Policy 57 g. Notably, ACT removes more material than SmolVLA despite lacking pretrained representations, suggesting that pretraining benefit is architecture- and scale-dependent rather than universal in this domain. Diffusion Policy is notably the slowest, consistent with its iterative denoising inference process. This work establishes a reproducible benchmark and open dataset (162 demonstrations) to support future research on autonomous confined-space operations.
+Dump pocket blockages at primary crushers cause production downtime and require manual clearing in hazardous restricted areas, with documented engulfment fatalities in hoppers and crusher zones. Autonomous approaches for dump pocket cleaning and blocked-crusher clearing remain limited, and the feasibility of state-of-the-art imitation learning (IL) for this excavation task remains largely unexplored. This paper introduces an experimental testbed and benchmark for evaluating IL architectures on autonomous dump pocket cleaning under controlled laboratory conditions. We benchmark four IL architectures: Action Chunking with Transformers (ACT), Diffusion Policy, and Vision-Language-Action models (π₀.₅ and SmolVLA), using a low-cost SO-ARM100 platform ($250) with granular bentonite material. In a preliminary single-session evaluation (10 minutes per model), π₀.₅ achieves the highest removal rate at 404 g, reaching 65% of the expert teleoperation estimate, followed by ACT (169 g), SmolVLA (113 g), and Diffusion Policy (57 g). π₀.₅'s lead is consistent with potential advantages from larger model capacity (3.7B vs. 450M parameters) and broader pretraining across diverse robot embodiments and tasks. ACT, trained from scratch on the same dataset, outperforms SmolVLA in this single-session benchmark, raising the hypothesis that for narrow single-task settings where the target domain differs from pretraining data, learning from scratch may remain competitive with fine-tuning a pretrained model. Diffusion Policy removes the least material, consistent with its visibly slower reactive behavior during rollout. This work establishes an open dataset (162 demonstrations) and a reproducible testbed to support future research on autonomous tasks for the mining industry.
 
-## Impact
+## Scope and Limitations
 
-This work establishes a reproducible benchmark for AI-driven autonomy in safety-critical confined-space operations, advancing the path toward **zero-entry dump pocket maintenance** and eliminating fatal engulfment risks in mining operations.
+The benchmark demonstrates laboratory feasibility in a simplified dump-pocket analogue, not mine-ready deployment. The testbed uses bentonite rather than heterogeneous ore, operates at roughly 1000× smaller scale than industrial hoppers (0.016 vs. 10–50 m³), and does not include dust, poor lighting, vibration, or mine-scale sensing constraints.
+
+Scaling to industrial embodiments also requires new demonstrations on the target hardware. The algorithmic workflow may transfer, and the current dataset may support benchmarking or pretraining, but final deployment data must be collected at the relevant scale and hardware. This lab-to-mine data and embodiment gap is the primary limitation.
+
+## Testbed Contribution
+
+The project provides a lab-scale dump-pocket testbed built on the open-source SO-ARM100 low-cost robot platform. The contribution is the mining task formulation, dataset, benchmark protocol, custom bucket setup, and reproducible evaluation pipeline for comparing imitation learning methods in a dump-pocket cleaning analogue.
 
 ## Citation
 
